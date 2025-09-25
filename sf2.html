@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Smartfuture Hub — Education · Government · Business Services</title>
+<style>
+  :root{
+    --navy:#0b1d4d;
+    --navy-2:#122651;
+    --teal:#38f9d7;
+    --accent:#1fc29a;
+    --card:#0f2046;
+    --muted:#9fb0d6;
+    --glass: rgba(255,255,255,0.04);
+    --maxw:1100px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color: #eaf2ff;
+    background: var(--navy);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
+
+  /* ---------- Background waves ---------- */
+  .bg{position:fixed; inset:0; z-index:0; pointer-events:none; display:block; width:100%; height:100%; overflow:hidden; background: linear-gradient(180deg,var(--navy),var(--navy-2) 60%);}
+  .wave-layer{position:absolute; left:-10%; width:120%; height:40%; filter: drop-shadow(0 18px 40px rgba(0,0,0,0.35)); opacity:0.95; mix-blend-mode:screen;}
+  .wave-1{ top:4%; animation:move1 18s linear infinite; transform-origin:center; opacity:0.95;}
+  .wave-2{ top:22%; animation:move2 24s linear infinite; opacity:0.85;}
+  .wave-3{ top:44%; animation:move3 32s linear infinite; opacity:0.75;}
+  @keyframes move1{0%{transform:translateX(0) translateY(0) rotate(0)}50%{transform:translateX(-6%) translateY(6px) rotate(.3deg)}100%{transform:translateX(0) translateY(0) rotate(0)}}
+  @keyframes move2{0%{transform:translateX(0)}50%{transform:translateX(-4%)}100%{transform:translateX(0)}}
+  @keyframes move3{0%{transform:translateX(0)}50%{transform:translateX(6%)}100%{transform:translateX(0)}}
+
+  .grid-overlay{position:fixed; inset:0; z-index:0; pointer-events:none; background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 60px 60px; mix-blend-mode: overlay; opacity:0.06;}
+
+  /* ---------- Layout ---------- */
+  .page{position:relative; z-index:10; max-width:var(--maxw); margin:28px auto; padding:18px;}
+  header{background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border-radius:12px; padding:28px; display:flex; gap:18px; align-items:center; justify-content:space-between; box-shadow: 0 12px 40px rgba(4,13,40,0.45); backdrop-filter: blur(6px) saturate(120%);}
+  .brand{display:flex;gap:16px;align-items:center;}
+  .brand .logo{width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,var(--teal),#22c9b8); display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--navy); box-shadow:0 8px 24px rgba(0,0,0,0.25); font-size:20px;}
+  .brand h1{font-size:20px;letter-spacing:0.2px}
+  .brand p{color:var(--muted);font-size:13px;margin-top:4px}
+  nav.main{display:flex; gap:14px; align-items:center;}
+  nav.main a{color:var(--muted); text-decoration:none; font-weight:700; padding:8px 12px; border-radius:8px; transition: all .18s ease;}
+  nav.main a:hover{color: #fff; background: rgba(255,255,255,0.03); transform:translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.45);}
+
+  .hero{margin-top:18px; display:flex; gap:22px; align-items:center; justify-content:space-between; flex-wrap:wrap; padding:24px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); box-shadow: 0 10px 40px rgba(3,8,30,0.45);}
+  .hero-left { flex:1; min-width:260px; color: #eaf2ff;}
+  .hero-left h2{font-size:26px;margin-bottom:10px}
+  .hero-left p{color:var(--muted);margin-bottom:12px}
+  .cta { background: linear-gradient(90deg,var(--teal),var(--accent)); color:var(--navy); padding:10px 16px; border-radius:999px; font-weight:900; text-decoration:none; box-shadow: 0 8px 28px rgba(25,170,150,0.12); }
+
+  /* ---------- Animated Counters ---------- */
+  .counters{display:flex; justify-content:space-around; gap:20px; margin:20px 0; text-align:center;}
+  .counter-box{flex:1; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); padding:16px; border-radius:12px;}
+  .counter{font-size:28px; font-weight:900; color:var(--teal);}
+  .counter-label{color:var(--muted); margin-top:6px; font-size:14px;}
+
+  /* content sections */
+  section.card { margin-top:16px; padding:22px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.02);}
+  .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:16px; }
+  .service { padding:18px;border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.03); transition: transform .28s cubic-bezier(.2,.9,.3,1), box-shadow .28s; transform: translateY(12px); opacity:0; will-change:transform,opacity; }
+  .service.visible { transform:none; opacity:1; }
+  .service:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(2,8,30,0.6); }
+  .service h3{margin-bottom:8px}
+  .service p{color:var(--muted);margin-bottom:10px}
+  .reqs-list{color:var(--muted); margin-left:18px; font-size:14px}
+
+  /* buttons & interactive */
+  .btn { display:inline-block; padding:10px 14px; border-radius:10px; background:linear-gradient(90deg,var(--teal),var(--accent)); color:var(--navy); font-weight:800; text-decoration:none; box-shadow: 0 10px 28px rgba(25,170,150,0.08); transition: transform .14s ease; }
+  .btn:hover { transform: translateY(-4px) scale(1.02); }
+
+  /* status checker */
+  .status-row { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap }
+  input, select, textarea { background: transparent; border:1px solid rgba(255,255,255,0.06); padding:10px; border-radius:8px; color:#eaf2ff }
+  input::placeholder { color: rgba(234,242,255,0.45) }
+
+  /* floating WhatsApp */
+  .whatsapp { position:fixed; right:18px; bottom:18px; z-index:999; background: #25D366; color: #03222A; padding:12px 18px; border-radius:999px; font-weight:800; text-decoration:none; box-shadow:0 18px 48px rgba(37,211,102,0.12); transform-origin:center; animation:whisp 2s infinite; }
+  @keyframes whisp { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
+
+  /* footer */
+  footer { margin-top:28px; padding:18px; border-radius:10px; display:flex; gap:16px; align-items:center; justify-content:space-between; color: var(--muted); background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+  footer .credit a { color: var(--teal); font-weight:800; text-decoration:none; }
+  footer .credit a:hover { text-decoration:underline; color:var(--accent); }
+
+  @media (max-width:980px){ .services-grid{grid-template-columns:repeat(1,1fr)} .hero-left h2{font-size:22px} .brand .logo{width:52px;height:52px} }
+  @media (prefers-reduced-motion: reduce){ .wave-layer, .service, .whatsapp, .splash { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- background layers (waves) -->
+<div class="bg" aria-hidden="true">
+  <svg class="wave-layer wave-1" viewBox="0 0 1200 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#0b1d4d" stop-opacity="0.85"/><stop offset="1" stop-color="#13407a" stop-opacity="0.6"/></linearGradient></defs>
+    <path d="M0,80 C180,200 360,10 600,80 C840,150 1020,20 1200,90 L1200,240 L0,240 Z" fill="url(#g1)"></path>
+  </svg>
+  <svg class="wave-layer wave-2" viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#0f2a58" /><stop offset="1" stop-color="#0d6b5f" /></linearGradient></defs>
+    <path d="M0,60 C200,20 380,200 600,120 C820,40 980,140 1200,90 L1200,200 L0,200 Z" fill="url(#g2)" opacity="0.98"></path>
+  </svg>
+  <svg class="wave-layer wave-3" viewBox="0 0 1200 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="g3" x1="0" x2="1"><stop offset="0" stop-color="#38f9d7" stop-opacity="0.12"/><stop offset="1" stop-color="#1fc29a" stop-opacity="0.06"/></linearGradient></defs>
+    <path d="M0,40 C180,120 420,0 600,50 C780,100 980,30 1200,70 L1200,180 L0,180 Z" fill="url(#g3)"></path>
+  </svg>
+  <div class="grid-overlay" aria-hidden="true"></div>
+</div>
+
+<!-- splash -->
+<div id="splash" class="splash" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:1200">
+  <div style="text-align:center;padding:28px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));box-shadow:0 20px 60px rgba(2,8,30,0.6)">
+    <h2 id="splash-text" style="font-size:28px;color:white;margin-bottom:8px"></h2>
+    <div style="color:rgba(255,255,255,0.85);font-weight:600">Helping you access HELB, KUCCPS, passports & more</div>
+    <div style="height:6px"></div>
+    <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:8px">Click anywhere to skip</div>
+  </div>
+</div>
+
+<div class="page">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true">SF</div>
+      <div>
+        <h1>Smartfuture Hub</h1>
+        <p>Education · Government · Business Services</p>
+      </div>
+    </div>
+    <nav class="main" aria-label="Main navigation">
+      <a href="#services">Services</a>
+      <a href="#requirements">HELB Checklist</a>
+      <a href="#resources">Resources</a>
+      <a href="#status">Status</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-left">
+        <h2 id="hero-title">Helping students access HELB, KUCCPS, KMTC, passports & more — correctly and quickly</h2>
+        <p>We prepare documents, guide submissions, and follow up on your behalf — payment after service completion.</p>
+        <a class="cta btn" href="#contact">Request Service</a>
+      </div>
+      <div style="min-width:220px;text-align:right">
+        <div style="background:var(--glass);padding:10px 12px;border-radius:10px;color:var(--muted);font-weight:700">Payment after service</div>
+      </div>
+    </section>
+
+    <!-- Animated Counters -->
+    <section class="counters">
+      <div class="counter-box">
+        <div class="counter" data-target="2400">0</div>
+        <div class="counter-label">Happy Students</div>
+      </div>
+      <div class="counter-box">
+        <div class="counter" data-target="1200">0</div>
+        <div class="counter-label">Successful Applications</div>
+      </div>
+      <div class="counter-box">
+        <div class="counter" data-target="350">0</div>
+        <div class="counter-label">Partner Institutions</div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="card" aria-labelledby="services-title">
+      <h2 id="services-title">Our Services</h2>
+      <p style="color:var(--muted)">We offer step-by-step help for education & government processes. Each service below animates into view.</p>
+
+      <div class="services-grid" id="services-grid">
+        <article class="service" data-animate>
+          <h3>HELB / HEF Applications</h3>
+          <p>Full HELB application support — first-time and repeat applicants. We compile documents and submit for you.</p>
+          <div class="reqs">
+            <strong>Requirements</strong>
+            <ul class="reqs-list">
+              <li>Personal details, place of birth, resident details</li>
+              <li>Education background, university details</li>
+              <li>Parents' details, 2 guarantors, passport photo, scanned ID</li>
+              <li>Payment mode: Bank account or M-Pesa</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="service" data-animate>
+          <h3>KUCCPS Placement</h3>
+          <p>Assist with KUCCPS course choices and revisions; guidance on selecting the best course for your career path.</p>
+          <div class="reqs">
+            <strong>Requirements</strong>
+            <ul class="reqs-list">
+              <li>KCSE index number, year & grade</li>
+              <li>Full names (as per certificate), contact phone & email</li>
+              <li>Preferred courses/institutions</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="service" data-animate>
+          <h3>KMTC Placement</h3>
+          <p>Support applying to KMTC programmes and required documentation for placement.</p>
+          <div class="reqs">
+            <strong>Requirements</strong>
+            <ul class="reqs-list">
+              <li>KCSE index, certificate copy, National ID or Waiting Card</li>
+              <li>Birth certificate, valid email & phone</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="service" data-animate>
+          <h3>TSC Registration</h3>
+          <p>Help teachers register with TSC, check PIN status, and submit necessary documents.</p>
+          <div class="reqs">
+            <strong>Requirements</strong>
+            <ul class="reqs-list">
+              <li>KCSE/KCPE certificates, National ID</li>
+              <li>Passport photo, TSC form completion</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="service" data-animate>
+          <h3>KRA PIN / Registration</h3>
+          <p>Assist with obtaining or updating your KRA PIN for tax purposes quickly and securely.</p>
+          <div class="reqs">
+            <strong>Requirements</strong>
+            <ul class="reqs-list">
+              <li>National ID / Passport copy</li>
+              <li>Full legal names, contact info</li>
+              <li>Business or employment details if applicable</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="service" data-animate>
+          <h3>Passport Application / Renewal</h3>
+          <p>Guidance for first-time passport application or renewal, with photo and document checks.</p>
+          <div class="reqs">
+            <strong>Requirements</strong>
+            <ul class="reqs-list">
+              <li>Birth certificate, National ID</li>
+              <li>Passport photo, guardian info (if minor)</li>
+              <li>Fees payable via bank or M-Pesa</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating WhatsApp -->
+  <a class="whatsapp" href="https://wa.me/254700000000" target="_blank">Chat WhatsApp</a>
+
+  <!-- Footer -->
+  <footer>
+    <div class="credit">&copy; 2025 <a href="#">Smartfuture Hub</a> — All rights reserved</div>
+    <div class="socials">Education · Government · Business</div>
+  </footer>
+</div>
+
+<script>
+  // Splash animation text
+  const splashTexts = ["Welcome to Smartfuture Hub", "Education & Government Services"];
+  let splashIndex = 0;
+  const splashTextEl = document.getElementById('splash-text');
+  splashTextEl.textContent = splashTexts[splashIndex];
+  setInterval(()=>{
+    splashIndex = (splashIndex+1) % splashTexts.length;
+    splashTextEl.textContent = splashTexts[splashIndex];
+  },2000);
+
+  // Hide splash on click
+  document.getElementById('splash').addEventListener('click',()=>{ document.getElementById('splash').style.display='none'; });
+
+  // Animate counters
+  const counters = document.querySelectorAll('.counter');
+  counters.forEach(counter=>{
+    const updateCount = ()=>{
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText;
+      const increment = target / 120;
+      if(count<target){
+        counter.innerText = Math.ceil(count+increment);
+        requestAnimationFrame(updateCount);
+      }else counter.innerText = target;
+    };
+    updateCount();
+  });
+
+  // Animate services on scroll
+  const services = document.querySelectorAll('.service[data-animate]');
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){ entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    });
+  }, {threshold:0.15});
+  services.forEach(s=>observer.observe(s));
+</script>
+
+</body>
+</html>
